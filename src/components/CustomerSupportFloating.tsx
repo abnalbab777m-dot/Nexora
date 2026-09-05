@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../lib/api';
 import { 
   Headphones, 
-  MessageCircle, 
   Send, 
   X, 
   ExternalLink, 
   ShieldCheck, 
-  HelpCircle,
   Clock
 } from 'lucide-react';
 
@@ -15,7 +13,6 @@ export default function CustomerSupportFloating() {
   const [isOpen, setIsOpen] = useState(false);
   const [settings, setSettings] = useState<{
     telegram_support?: string;
-    whatsapp_support?: string;
     site_name?: string;
   }>({});
 
@@ -35,14 +32,6 @@ export default function CustomerSupportFloating() {
   };
 
   const telegramUrl = settings.telegram_support?.trim() || 'https://t.me/NexoraSupport';
-  const whatsappUrl = settings.whatsapp_support?.trim() || '';
-
-  // Format whatsapp URL if it's a raw number
-  const formattedWhatsappUrl = whatsappUrl
-    ? whatsappUrl.startsWith('http') 
-      ? whatsappUrl 
-      : `https://wa.me/${whatsappUrl.replace(/[^0-9]/g, '')}`
-    : '';
 
   return (
     <div className="fixed bottom-20 md:bottom-6 left-6 z-40" dir="rtl">
@@ -75,45 +64,25 @@ export default function CustomerSupportFloating() {
           {/* Body */}
           <div className="p-4 space-y-3">
             <p className="text-xs text-neutral-300 leading-relaxed">
-              هل تواجه أي مشكلة في الإيداع، السحب، أو ترقية باقات VIP؟ تواصل مباشرة مع مسؤولي خدمة العملاء:
+              هل تواجه أي مشكلة في الإيداع، السحب، أو ترقية باقات VIP؟ تواصل مباشرة مع الدعم الفني عبر تليجرام:
             </p>
 
             {/* Telegram Support Button */}
             {telegramUrl && (
               <a
+                id="telegram-support-direct-link"
                 href={telegramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between p-3 rounded-xl bg-[#229ED9]/10 hover:bg-[#229ED9]/20 border border-[#229ED9]/30 text-white transition-all group"
+                className="flex items-center justify-between p-3.5 rounded-xl bg-[#229ED9]/15 hover:bg-[#229ED9]/25 border border-[#229ED9]/40 text-white transition-all group shadow-sm hover:border-[#229ED9]"
               >
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-[#229ED9] text-white flex items-center justify-center">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#229ED9] text-white flex items-center justify-center shadow-md shadow-[#229ED9]/30">
                     <Send className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-xs font-bold block text-white">دعم تليجرام (Telegram)</span>
-                    <span className="text-[10px] text-neutral-400">استجابة سريعة وفورية</span>
-                  </div>
-                </div>
-                <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:text-white transition-colors" />
-              </a>
-            )}
-
-            {/* WhatsApp Support Button */}
-            {formattedWhatsappUrl && (
-              <a
-                href={formattedWhatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center justify-between p-3 rounded-xl bg-[#25D366]/10 hover:bg-[#25D366]/20 border border-[#25D366]/30 text-white transition-all group"
-              >
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-[#25D366] text-white flex items-center justify-center">
-                    <MessageCircle className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold block text-white">دعم واتساب (WhatsApp)</span>
-                    <span className="text-[10px] text-neutral-400">محادثة فورية مع الممثل</span>
+                    <span className="text-sm font-bold block text-white">دعم تليجرام (Telegram)</span>
+                    <span className="text-[11px] text-sky-200">استجابة سريعة وفورية 24/7</span>
                   </div>
                 </div>
                 <ExternalLink className="w-4 h-4 text-neutral-400 group-hover:text-white transition-colors" />
@@ -123,11 +92,11 @@ export default function CustomerSupportFloating() {
             <div className="pt-2 border-t border-neutral-800/80 flex items-center justify-between text-[11px] text-neutral-500">
               <span className="flex items-center gap-1">
                 <ShieldCheck className="w-3.5 h-3.5 text-yellow-500" />
-                قنوات معتمدة رسمياً
+                قناة معتمدة رسمياً
               </span>
               <span className="flex items-center gap-1">
                 <Clock className="w-3.5 h-3.5" />
-                رد خلال دقائق
+                رد فوري خلال دقائق
               </span>
             </div>
           </div>
