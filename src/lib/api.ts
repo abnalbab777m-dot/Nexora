@@ -64,7 +64,7 @@ async function fetchWithAuth(url: string, options: RequestInit = {}): Promise<Re
 
     return res;
   } catch (netErr: any) {
-    console.error(`Network/Fetch error for ${url}:`, netErr);
+    console.warn(`[Network/Fetch info for ${url}]:`, netErr?.message || netErr);
     throw new Error(netErr.message === 'Failed to fetch' ? 'تعذر الاتصال بالخادم، يرجى التحقق من اتصالك بالإنترنت أو إعادة تحميل الصفحة' : (netErr.message || 'حدث خطأ في الاتصال بالخادم'));
   }
 }

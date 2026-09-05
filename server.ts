@@ -14,7 +14,9 @@ import { runDatabaseCleanup } from './server/services/db-cleanup.service.ts';
 
 async function startServer() {
   const app = express();
-  const PORT = Number(process.env.PORT) || 3000;
+  // In AI Studio container, nginx listens on 8080 and routes to 3000. Express must bind strictly to 3000.
+  // When deployed on Render, process.env.RENDER is set and Render specifies PORT.
+  const PORT = process.env.RENDER ? (Number(process.env.PORT) || 3000) : 3000;
 
   // Run database seeding and cleanup asynchronously on startup
   runDatabaseSeed().then(() => {

@@ -92,6 +92,7 @@ export default function DashboardLayout() {
 
   const fetchNotifs = async () => {
     if (!profile) return;
+    if (typeof document !== 'undefined' && document.hidden) return;
     try {
       const data = await api.getNotifications();
       const fetched: Notification[] = data.notifications || [];
@@ -116,9 +117,18 @@ export default function DashboardLayout() {
 
   useEffect(() => {
     fetchNotifs();
-    // Fast polling every 5 seconds for immediate real-time updates
-    const interval = setInterval(fetchNotifs, 5000);
-    return () => clearInterval(interval);
+    // Poll every 10 seconds for real-time updates when active
+    const interval = setInterval(fetchNotifs, 10000);
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        fetchNotifs();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, [profile]);
 
   const unreadCount = notifications.filter(n => !n.read).length;
