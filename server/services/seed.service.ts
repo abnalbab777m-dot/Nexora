@@ -20,7 +20,7 @@ export async function runDatabaseSeed() {
   try {
     console.log('[Seed Service]: Checking database seed state...');
 
-    // 1. Seed & Synchronize Official VIP Plans (160% net profit, 30 days duration)
+    // 1. Seed & Synchronize Official VIP Plans (360% net profit, 30 days duration)
     const targetPlans = [
       {
         level: 1,

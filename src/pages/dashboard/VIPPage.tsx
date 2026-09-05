@@ -25,86 +25,29 @@ import { useAuth } from '../../context/AuthContext';
 import { api } from '../../lib/api';
 import { Link } from 'react-router-dom';
 
-// Expected profit calculation helper based on official Nexora VIP system (160% net profit, 30 days duration)
+// Expected profit calculation helper based on official Nexora VIP system (360% net profit, 460% total return, 30 days duration)
 const getPlanProfitEstimates = (plan: VipPlan) => {
-  switch (plan.level) {
-    case 1: // $15
-      return { 
-        dailyProfit: 1.30, 
-        monthlyProfit: 39.0, 
-        netProfit: 24.0, 
-        tasksCount: 4, 
-        adsCount: 4, 
-        unitReward: 0.1625, 
-        badge: 'VIP 1 (المبتدئ)' 
-      };
-    case 2: // $30
-      return { 
-        dailyProfit: 2.60, 
-        monthlyProfit: 78.0, 
-        netProfit: 48.0, 
-        tasksCount: 6, 
-        adsCount: 6, 
-        unitReward: 0.2167, 
-        badge: 'VIP 2 (المتقدم)' 
-      };
-    case 3: // $100
-      return { 
-        dailyProfit: 8.67, 
-        monthlyProfit: 260.0, 
-        netProfit: 160.0, 
-        tasksCount: 8, 
-        adsCount: 8, 
-        unitReward: 0.5419, 
-        badge: 'VIP 3 (الفضي)' 
-      };
-    case 4: // $250
-      return { 
-        dailyProfit: 21.67, 
-        monthlyProfit: 650.0, 
-        netProfit: 400.0, 
-        tasksCount: 12, 
-        adsCount: 12, 
-        unitReward: 0.9029, 
-        badge: 'VIP 4 (الذهبي)' 
-      };
-    case 5: // $500
-      return { 
-        dailyProfit: 43.33, 
-        monthlyProfit: 1300.0, 
-        netProfit: 800.0, 
-        tasksCount: 16, 
-        adsCount: 16, 
-        unitReward: 1.3541, 
-        badge: 'VIP 5 (البلاتيني)' 
-      };
-    case 6: // $1000
-      return { 
-        dailyProfit: 86.67, 
-        monthlyProfit: 2600.0, 
-        netProfit: 1600.0, 
-        tasksCount: 20, 
-        adsCount: 20, 
-        unitReward: 2.1668, 
-        badge: 'VIP 6 (الماسي)' 
-      };
-    default: {
-      const price = Number(plan.price) || 15;
-      const daily = Number(((price * 2.6) / 30).toFixed(2));
-      const monthly = Number((daily * (plan.durationDays || 30)).toFixed(2));
-      const net = Number((monthly - price).toFixed(2));
-      const totalInteractions = (plan.dailyTasks || 4) + (plan.dailyAds || 4);
-      return {
-        dailyProfit: daily,
-        monthlyProfit: monthly,
-        netProfit: net,
-        tasksCount: plan.dailyTasks || 4,
-        adsCount: plan.dailyAds || 4,
-        unitReward: Number((daily / totalInteractions).toFixed(4)),
-        badge: plan.name || `VIP ${plan.level}`
-      };
-    }
-  }
+  const price = Number(plan.price) || 15;
+  const duration = plan.durationDays || 30;
+  const profitRate = 3.6; // 360% net profit
+  const totalReturn = Number((price * (1 + profitRate)).toFixed(2)); // 460% total return (principal + net profit)
+  const net = Number((price * profitRate).toFixed(2)); // 360% net profit
+  const daily = Number((totalReturn / duration).toFixed(2));
+  
+  const tasksCount = plan.dailyTasks || 4;
+  const adsCount = plan.dailyAds || 4;
+  const totalInteractions = Math.max(tasksCount + adsCount, 1);
+  const unitReward = Number((daily / totalInteractions).toFixed(4));
+
+  return {
+    dailyProfit: daily,
+    monthlyProfit: totalReturn,
+    netProfit: net,
+    tasksCount,
+    adsCount,
+    unitReward,
+    badge: plan.name || `VIP ${plan.level}`
+  };
 };
 
 export default function VIPPage() {
@@ -206,7 +149,7 @@ export default function VIPPage() {
           </h1>
           
           <p className="text-neutral-400 text-sm md:text-base leading-relaxed">
-            اشترك في إحدى باقات VIP المعتمدة (نسبة صافي الربح 160% | صلاحية 30 يوماً). تُضاف أرباح المهام والإعلانات مباشرة إلى رصيدك المتاح، والسحب متاح على مدار الساعة (24/7) فور وصول الرصيد إلى 5.00$ أو أكثر.
+            اشترك في إحدى باقات VIP المعتمدة (نسبة صافي الربح 360% | إجمالي العائد 460% | صلاحية 30 يوماً). تُضاف أرباح المهام والإعلانات مباشرة إلى رصيدك المتاح، والسحب متاح على مدار الساعة (24/7) فور وصول الرصيد إلى 5.00$ أو أكثر.
           </p>
 
           {/* Current VIP Status & Wallet Bar */}
@@ -331,7 +274,7 @@ export default function VIPPage() {
 
                 {/* Net Profit Banner */}
                 <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs">
-                  <span className="text-neutral-300 font-medium">صافي الربح (+160%):</span>
+                  <span className="text-neutral-300 font-medium">صافي الربح (+360%):</span>
                   <span className="text-emerald-400 font-bold font-mono">+{formatCurrency(getPlanProfitEstimates(plan).netProfit)}</span>
                 </div>
 
