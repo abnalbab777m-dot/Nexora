@@ -35,13 +35,13 @@ const ORIGINAL_BASE_PRICES: Record<number, number> = {
   6: 1000,
 };
 
-// Expected profit calculation helper based on official Nexora VIP system (exact daily & monthly returns preserved)
+// Expected profit calculation helper based on official Nexora VIP system (+100% added to profit rate: 360% -> 460%)
 const getPlanProfitEstimates = (plan: VipPlan) => {
   const basePrice = ORIGINAL_BASE_PRICES[plan.level] || (Number(plan.price) * 2);
   const duration = plan.durationDays || 30;
-  const profitRate = 3.6; // 360% net profit baseline
-  const totalReturn = Number((basePrice * (1 + profitRate)).toFixed(2)); // 460% total return
-  const net = Number((basePrice * profitRate).toFixed(2)); // 360% net profit
+  const profitRate = 4.6; // 460% net profit baseline (+100% added: from 360% to 460%)
+  const totalReturn = Number((basePrice * (1 + profitRate)).toFixed(2)); // 560% total return
+  const net = Number((basePrice * profitRate).toFixed(2)); // 460% net profit
   const daily = Number((totalReturn / duration).toFixed(2));
   
   const tasksCount = plan.dailyTasks || 4;
@@ -159,7 +159,7 @@ export default function VIPPage() {
           </h1>
           
           <p className="text-neutral-400 text-sm md:text-base leading-relaxed">
-            اشترك في إحدى باقات VIP المعتمدة (نسبة صافي الربح 360% | إجمالي العائد 460% | صلاحية 30 يوماً). تُضاف أرباح المهام والإعلانات مباشرة إلى رصيدك المتاح، والسحب متاح على مدار الساعة (24/7) فور وصول الرصيد إلى 5.00$ أو أكثر.
+            اشترك في إحدى باقات VIP المعتمدة (نسبة صافي الربح 460% | إجمالي العائد 560% | صلاحية 30 يوماً). تُضاف أرباح المهام والإعلانات مباشرة إلى رصيدك المتاح، والسحب متاح على مدار الساعة (24/7) فور وصول الرصيد إلى 5.00$ أو أكثر.
           </p>
 
           {/* Current VIP Status & Wallet Bar */}
@@ -284,7 +284,7 @@ export default function VIPPage() {
 
                 {/* Net Profit Banner */}
                 <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs">
-                  <span className="text-neutral-300 font-medium">صافي الربح (+360%):</span>
+                  <span className="text-neutral-300 font-medium">صافي الربح (+460%):</span>
                   <span className="text-emerald-400 font-bold font-mono">+{formatCurrency(getPlanProfitEstimates(plan).netProfit)}</span>
                 </div>
 
