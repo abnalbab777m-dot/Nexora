@@ -25,13 +25,23 @@ import { useAuth } from '../../context/AuthContext';
 import { api } from '../../lib/api';
 import { Link } from 'react-router-dom';
 
-// Expected profit calculation helper based on official Nexora VIP system (360% net profit, 460% total return, 30 days duration)
+// Original base prices prior to 50% subscription discount (preserves exact original profit returns)
+const ORIGINAL_BASE_PRICES: Record<number, number> = {
+  1: 15,
+  2: 30,
+  3: 100,
+  4: 250,
+  5: 500,
+  6: 1000,
+};
+
+// Expected profit calculation helper based on official Nexora VIP system (exact daily & monthly returns preserved)
 const getPlanProfitEstimates = (plan: VipPlan) => {
-  const price = Number(plan.price) || 15;
+  const basePrice = ORIGINAL_BASE_PRICES[plan.level] || (Number(plan.price) * 2);
   const duration = plan.durationDays || 30;
-  const profitRate = 3.6; // 360% net profit
-  const totalReturn = Number((price * (1 + profitRate)).toFixed(2)); // 460% total return (principal + net profit)
-  const net = Number((price * profitRate).toFixed(2)); // 360% net profit
+  const profitRate = 3.6; // 360% net profit baseline
+  const totalReturn = Number((basePrice * (1 + profitRate)).toFixed(2)); // 460% total return
+  const net = Number((basePrice * profitRate).toFixed(2)); // 360% net profit
   const daily = Number((totalReturn / duration).toFixed(2));
   
   const tasksCount = plan.dailyTasks || 4;
