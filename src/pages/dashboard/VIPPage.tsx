@@ -35,14 +35,18 @@ const ORIGINAL_BASE_PRICES: Record<number, number> = {
   6: 1000,
 };
 
-// Expected profit calculation helper based on official Nexora VIP system (+100% added to profit rate: 360% -> 460%, weekly 7 days duration)
+// Expected profit calculation helper based on official Nexora VIP system (+100% added to profit rate: 360% -> 460%, weekly 7-day subscription balanced with 30-day monthly return)
 const getPlanProfitEstimates = (plan: VipPlan) => {
   const basePrice = ORIGINAL_BASE_PRICES[plan.level] || (Number(plan.price) * 2);
-  const duration = plan.durationDays || 7;
   const profitRate = 4.6; // 460% net profit baseline (+100% added: from 360% to 460%)
-  const totalReturn = Number((basePrice * (1 + profitRate)).toFixed(2)); // 560% total return
-  const net = Number((basePrice * profitRate).toFixed(2)); // 460% net profit
-  const daily = Number((totalReturn / duration).toFixed(2));
+  const monthlyReturn = Number((basePrice * (1 + profitRate)).toFixed(2)); // 560% total monthly return (e.g. $84 for VIP 1)
+  const netMonthlyProfit = Number((basePrice * profitRate).toFixed(2)); // 460% net monthly profit (e.g. $69 for VIP 1)
+  
+  // Daily profit balanced precisely with monthly return (30 days: e.g. 84.00 / 30 = 2.80$)
+  const daily = Number((monthlyReturn / 30).toFixed(2));
+  
+  // Weekly return for the 7-day subscription (e.g. 2.80 * 7 = 19.60$)
+  const weekly = Number((daily * 7).toFixed(2));
   
   const tasksCount = plan.dailyTasks || 4;
   const adsCount = plan.dailyAds || 4;
@@ -51,9 +55,9 @@ const getPlanProfitEstimates = (plan: VipPlan) => {
 
   return {
     dailyProfit: daily,
-    monthlyProfit: totalReturn,
-    weeklyProfit: totalReturn,
-    netProfit: net,
+    weeklyProfit: weekly,
+    monthlyProfit: monthlyReturn,
+    netProfit: netMonthlyProfit,
     tasksCount,
     adsCount,
     unitReward,
@@ -160,7 +164,7 @@ export default function VIPPage() {
           </h1>
           
           <p className="text-neutral-400 text-sm md:text-base leading-relaxed">
-            اشترك في إحدى باقات VIP المعتمدة (نسبة صافي الربح 460% | إجمالي العائد 560% | صلاحية 7 أيام أسبوعياً). تُضاف أرباح المهام والإعلانات مباشرة إلى رصيدك المتاح، والسحب متاح على مدار الساعة (24/7) فور وصول الرصيد إلى 5.00$ أو أكثر.
+            اشترك في إحدى باقات VIP المعتمدة (اشتراك أسبوعي 7 أيام | أرباح يومية متوازنة مع العائد الشهري 560% وصافي ربح 460%). تُضاف أرباح المهام والإعلانات مباشرة إلى رصيدك المتاح، والسحب متاح على مدار الساعة (24/7) فور وصول الرصيد إلى 5.00$ أو أكثر.
           </p>
 
           {/* Current VIP Status & Wallet Bar */}
@@ -224,7 +228,7 @@ export default function VIPPage() {
           const isPassed = currentVipLevel > plan.level;
           const canUpgrade = currentVipLevel < plan.level;
           const hasEnoughBalance = availableBalance >= plan.price;
-          const { dailyProfit, monthlyProfit, badge } = getPlanProfitEstimates(plan);
+          const { dailyProfit, weeklyProfit, monthlyProfit, badge } = getPlanProfitEstimates(plan);
 
           return (
             <Card 
@@ -267,17 +271,23 @@ export default function VIPPage() {
               </CardHeader>
 
               <CardContent className="space-y-6 flex-1 flex flex-col justify-between pb-6">
-                {/* Stats / Expected Profit Highlights */}
-                <div className="grid grid-cols-2 gap-2.5 bg-neutral-950/60 p-3 rounded-xl border border-neutral-800/80">
+                {/* Stats / Expected Profit Highlights (Balanced Daily, Weekly, and Monthly) */}
+                <div className="grid grid-cols-3 gap-2 bg-neutral-950/60 p-2.5 rounded-xl border border-neutral-800/80">
                   <div className="p-2 text-center rounded-lg bg-neutral-900/50">
-                    <span className="text-[11px] text-neutral-400 block mb-0.5">الربح اليومي</span>
-                    <span className="text-sm font-bold text-emerald-400">
+                    <span className="text-[10px] text-neutral-400 block mb-0.5">الربح اليومي</span>
+                    <span className="text-xs md:text-sm font-bold text-emerald-400 font-mono">
                       +{formatCurrency(dailyProfit)}
                     </span>
                   </div>
                   <div className="p-2 text-center rounded-lg bg-neutral-900/50">
-                    <span className="text-[11px] text-neutral-400 block mb-0.5">إجمالي العائد (7 أيام)</span>
-                    <span className="text-sm font-bold text-amber-400">
+                    <span className="text-[10px] text-neutral-400 block mb-0.5">عائد أسبوعي (7د)</span>
+                    <span className="text-xs md:text-sm font-bold text-sky-400 font-mono">
+                      +{formatCurrency(weeklyProfit)}
+                    </span>
+                  </div>
+                  <div className="p-2 text-center rounded-lg bg-neutral-900/50">
+                    <span className="text-[10px] text-neutral-400 block mb-0.5">عائد شهري (30د)</span>
+                    <span className="text-xs md:text-sm font-bold text-amber-400 font-mono">
                       +{formatCurrency(monthlyProfit)}
                     </span>
                   </div>
@@ -285,7 +295,7 @@ export default function VIPPage() {
 
                 {/* Net Profit Banner */}
                 <div className="flex items-center justify-between px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-xs">
-                  <span className="text-neutral-300 font-medium">صافي الربح (+460%):</span>
+                  <span className="text-neutral-300 font-medium">صافي الربح الشهري (+460%):</span>
                   <span className="text-emerald-400 font-bold font-mono">+{formatCurrency(getPlanProfitEstimates(plan).netProfit)}</span>
                 </div>
 
