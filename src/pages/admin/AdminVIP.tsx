@@ -50,7 +50,7 @@ export default function AdminVIP() {
         <h1 className="text-2xl font-bold">إدارة باقات VIP</h1>
         <div className="flex gap-2">
           <Button variant="outline" onClick={fetchData}>تحديث</Button>
-          <Button onClick={() => setEditingPlan({ name: '', level: 1, price: 10, durationDays: 30, dailyTasks: 5, dailyAds: 5, status: 'ACTIVE' })}>
+          <Button onClick={() => setEditingPlan({ name: '', level: 1, price: 10, durationDays: 7, dailyTasks: 5, dailyAds: 5, status: 'ACTIVE' })}>
             <Plus className="w-4 h-4 ml-2" /> باقة جديدة
           </Button>
         </div>
@@ -106,7 +106,7 @@ export default function AdminVIP() {
                 </div>
                 <div className="flex justify-between">
                   <span>المدة:</span>
-                  <span className="text-white">{plan.durationDays} يوم</span>
+                  <span className="text-white">{plan.durationDays} أيام (أسبوعي)</span>
                 </div>
                 <div className="flex justify-between">
                   <span>مهام يومية:</span>

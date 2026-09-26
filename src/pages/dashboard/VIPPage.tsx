@@ -35,10 +35,10 @@ const ORIGINAL_BASE_PRICES: Record<number, number> = {
   6: 1000,
 };
 
-// Expected profit calculation helper based on official Nexora VIP system (+100% added to profit rate: 360% -> 460%)
+// Expected profit calculation helper based on official Nexora VIP system (+100% added to profit rate: 360% -> 460%, weekly 7 days duration)
 const getPlanProfitEstimates = (plan: VipPlan) => {
   const basePrice = ORIGINAL_BASE_PRICES[plan.level] || (Number(plan.price) * 2);
-  const duration = plan.durationDays || 30;
+  const duration = plan.durationDays || 7;
   const profitRate = 4.6; // 460% net profit baseline (+100% added: from 360% to 460%)
   const totalReturn = Number((basePrice * (1 + profitRate)).toFixed(2)); // 560% total return
   const net = Number((basePrice * profitRate).toFixed(2)); // 460% net profit
@@ -52,6 +52,7 @@ const getPlanProfitEstimates = (plan: VipPlan) => {
   return {
     dailyProfit: daily,
     monthlyProfit: totalReturn,
+    weeklyProfit: totalReturn,
     netProfit: net,
     tasksCount,
     adsCount,
@@ -159,7 +160,7 @@ export default function VIPPage() {
           </h1>
           
           <p className="text-neutral-400 text-sm md:text-base leading-relaxed">
-            اشترك في إحدى باقات VIP المعتمدة (نسبة صافي الربح 460% | إجمالي العائد 560% | صلاحية 30 يوماً). تُضاف أرباح المهام والإعلانات مباشرة إلى رصيدك المتاح، والسحب متاح على مدار الساعة (24/7) فور وصول الرصيد إلى 5.00$ أو أكثر.
+            اشترك في إحدى باقات VIP المعتمدة (نسبة صافي الربح 460% | إجمالي العائد 560% | صلاحية 7 أيام أسبوعياً). تُضاف أرباح المهام والإعلانات مباشرة إلى رصيدك المتاح، والسحب متاح على مدار الساعة (24/7) فور وصول الرصيد إلى 5.00$ أو أكثر.
           </p>
 
           {/* Current VIP Status & Wallet Bar */}
@@ -260,7 +261,7 @@ export default function VIPPage() {
                     {formatCurrency(plan.price)}
                   </span>
                   <span className="text-xs text-neutral-400 font-medium">
-                    / {plan.durationDays} يوم
+                    / {plan.durationDays || 7} أيام (أسبوعي)
                   </span>
                 </div>
               </CardHeader>
@@ -275,7 +276,7 @@ export default function VIPPage() {
                     </span>
                   </div>
                   <div className="p-2 text-center rounded-lg bg-neutral-900/50">
-                    <span className="text-[11px] text-neutral-400 block mb-0.5">إجمالي العائد (30 يوم)</span>
+                    <span className="text-[11px] text-neutral-400 block mb-0.5">إجمالي العائد (7 أيام)</span>
                     <span className="text-sm font-bold text-amber-400">
                       +{formatCurrency(monthlyProfit)}
                     </span>
@@ -404,7 +405,7 @@ export default function VIPPage() {
             {/* Financial Summary */}
             <div className="space-y-2.5 bg-neutral-950/80 p-4 rounded-xl border border-neutral-800/80 text-xs">
               <div className="flex justify-between items-center text-neutral-400">
-                <span>سعر الباقة ({selectedPlan.durationDays} يوم):</span>
+                <span>سعر الباقة ({selectedPlan.durationDays || 7} أيام - أسبوعي):</span>
                 <span className="font-bold text-white text-sm">{formatCurrency(selectedPlan.price)}</span>
               </div>
 

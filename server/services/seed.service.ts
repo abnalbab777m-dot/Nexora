@@ -20,13 +20,13 @@ export async function runDatabaseSeed() {
   try {
     console.log('[Seed Service]: Checking database seed state...');
 
-    // 1. Seed & Synchronize Official VIP Plans (50% discounted prices, maintaining original profits)
+    // 1. Seed & Synchronize Official VIP Plans (Weekly 7 days duration)
     const targetPlans = [
       {
         level: 1,
         name: 'VIP 1 (المبتدئ)',
         price: 7.5,
-        durationDays: 30,
+        durationDays: 7,
         dailyTasks: 4,
         dailyAds: 4,
         status: 'ACTIVE',
@@ -35,7 +35,7 @@ export async function runDatabaseSeed() {
         level: 2,
         name: 'VIP 2 (المتقدم)',
         price: 15,
-        durationDays: 30,
+        durationDays: 7,
         dailyTasks: 6,
         dailyAds: 6,
         status: 'ACTIVE',
@@ -44,7 +44,7 @@ export async function runDatabaseSeed() {
         level: 3,
         name: 'VIP 3 (الفضي)',
         price: 50,
-        durationDays: 30,
+        durationDays: 7,
         dailyTasks: 8,
         dailyAds: 8,
         status: 'ACTIVE',
@@ -53,7 +53,7 @@ export async function runDatabaseSeed() {
         level: 4,
         name: 'VIP 4 (الذهبي)',
         price: 125,
-        durationDays: 30,
+        durationDays: 7,
         dailyTasks: 12,
         dailyAds: 12,
         status: 'ACTIVE',
@@ -62,7 +62,7 @@ export async function runDatabaseSeed() {
         level: 5,
         name: 'VIP 5 (البلاتيني)',
         price: 250,
-        durationDays: 30,
+        durationDays: 7,
         dailyTasks: 16,
         dailyAds: 16,
         status: 'ACTIVE',
@@ -71,7 +71,7 @@ export async function runDatabaseSeed() {
         level: 6,
         name: 'VIP 6 (الماسي)',
         price: 500,
-        durationDays: 30,
+        durationDays: 7,
         dailyTasks: 20,
         dailyAds: 20,
         status: 'ACTIVE',
