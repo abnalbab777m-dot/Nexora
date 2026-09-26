@@ -362,14 +362,14 @@ export default function DashboardLayout() {
         <CustomerSupportFloating />
         
         {/* Mobile Nav */}
-        <nav className="md:hidden flex items-center justify-around p-2 border-t border-neutral-800 bg-neutral-900/90 backdrop-blur-md pb-safe">
+        <nav className="md:hidden flex items-center justify-around p-2 border-t border-neutral-800 bg-neutral-900/90 backdrop-blur-md pb-safe select-none">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               end={item.end}
               className={({ isActive }) => cn(
-                'flex flex-col items-center gap-1 p-1.5 rounded-lg transition-colors',
+                'nav-item flex flex-col items-center gap-1 p-1.5 rounded-lg transition-colors select-none',
                 isActive ? 'text-yellow-500 font-bold' : 'text-neutral-400 hover:text-neutral-200'
               )}
             >
@@ -381,7 +381,7 @@ export default function DashboardLayout() {
             <NavLink
               to="/admin"
               className={({ isActive }) => cn(
-                'flex flex-col items-center gap-1 p-1.5 rounded-lg transition-colors text-red-400 font-bold',
+                'nav-item flex flex-col items-center gap-1 p-1.5 rounded-lg transition-colors text-red-400 font-bold select-none',
                 isActive && 'text-red-300'
               )}
             >

@@ -10,8 +10,49 @@
     --foreground: #fafafa;
   }
   
+  /* 1. منع سحب التحديث الافتراضي وارتداد الشاشة (Overscroll) */
+  html, body {
+    overscroll-behavior-y: none;
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* 2. إزالة تأخير النقرات وتسريع استجابة اللمس */
+  * {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
   body {
     @apply bg-[#0a0a0a] text-neutral-50 font-sans antialiased selection:bg-yellow-500/30 selection:text-yellow-200;
     direction: rtl;
+  }
+
+  /* 3. إضافة تفاعل فوري للأزرار والقوائم عند اللمس */
+  button:active, 
+  a:active, 
+  .nav-item:active,
+  [role="button"]:active {
+    transform: scale(0.97);
+    transition: transform 0.05s ease;
+  }
+
+  /* 4. منع تحديد النصوص بالخطأ أثناء التنقل واللمس السريع */
+  button,
+  a,
+  nav,
+  header,
+  .nav-item,
+  [role="button"],
+  .select-none {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* السماح بتحديد النصوص وكتابتها في حقول الإدخال */
+  input,
+  textarea {
+    user-select: text;
+    -webkit-user-select: text;
   }
 }

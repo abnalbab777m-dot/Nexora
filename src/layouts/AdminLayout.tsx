@@ -150,7 +150,7 @@ export default function AdminLayout() {
         </main>
         
         {/* Mobile Nav */}
-        <nav className="md:hidden flex items-center justify-around p-2 border-t border-neutral-800 bg-neutral-900/90 backdrop-blur-md pb-safe">
+        <nav className="md:hidden flex items-center justify-around p-2 border-t border-neutral-800 bg-neutral-900/90 backdrop-blur-md pb-safe select-none">
           {navItems.slice(0, 5).map((item) => {
             const currentPath = location.pathname;
             const isActive = item.to === '/admin' ? currentPath === '/admin' : currentPath === item.to;
@@ -159,7 +159,7 @@ export default function AdminLayout() {
                 key={item.to}
                 to={item.to}
                 className={cn(
-                  'flex flex-col items-center gap-1 p-1.5 rounded-lg transition-colors relative',
+                  'nav-item flex flex-col items-center gap-1 p-1.5 rounded-lg transition-colors relative select-none',
                   isActive ? 'text-yellow-500' : 'text-neutral-400'
                 )}
               >
@@ -173,7 +173,7 @@ export default function AdminLayout() {
               </Link>
             );
           })}
-          <Button variant="ghost" size="sm" className="flex flex-col items-center gap-1 p-1 h-auto hover:bg-transparent rounded-lg text-neutral-500" onClick={handleLogout}>
+          <Button variant="ghost" size="sm" className="nav-item flex flex-col items-center gap-1 p-1 h-auto hover:bg-transparent rounded-lg text-neutral-500 select-none" onClick={handleLogout}>
             <LogOut className="w-4 h-4" />
             <span className="text-[10px]">خروج</span>
           </Button>
